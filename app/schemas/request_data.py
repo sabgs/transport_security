@@ -6,6 +6,7 @@ class RequestSchema(Schema):
    question_text = fields.String(load_only=True)
    answers_list = fields.List(fields.String(), load_only=True)
    correct_answer = fields.Integer()
+   category_id = fields.Integer()
 
    number = fields.Method('normolize_question_number', dump_only=True)
    text = fields.Method('normolize_question_text', dump_only=True)
@@ -23,8 +24,10 @@ class RequestSchema(Schema):
    def normolize_answers_text(self, obj):
       answers_list = []
       for answer in obj['answers_list']:
-         answer_text = re.findall(r"^\s+\d+.|.\s+([\w\s,./«»()\-\–\—]+)", answer)[1].strip()
-         answers_list.append(answer_text)
+         answer_text = re.findall(r"^\s+\d+.|.\s+([\w\s\d,./«»()\-\–\—]+)", answer)[1].strip()
+         answers_list.append({'text': answer_text})
       return answers_list
 
 
+request_schema = RequestSchema()
+requests_schema = RequestSchema(many=True)

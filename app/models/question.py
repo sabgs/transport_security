@@ -2,9 +2,9 @@ from ..core.ext import db
 
 class Question(db.Model):
    id = db.Column(db.Integer, primary_key=True)
-   number = db.Column(db.String(5), nullable=False)
-   text = db.Column(db.String(255), nullable=False)
-   correct_answer = db.Column(db.String(1))
+   number = db.Column(db.Integer, nullable=False)
+   text = db.Column(db.Text, nullable=False)
+   correct_answer = db.Column(db.Integer)
    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
    answers = db.relationship('Answer', lazy=False)
 

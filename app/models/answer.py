@@ -2,7 +2,7 @@ from ..core.ext import db
 
 class Answer(db.Model):
    id = db.Column(db.Integer, primary_key=True)
-   text = db.Column(db.String(255), nullable=False)
+   text = db.Column(db.Text, nullable=False)
    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
 
    # def __init__(self, text: str):

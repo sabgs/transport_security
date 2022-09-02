@@ -172,3 +172,4 @@ test.db
 test2.db
 test.sql
 backup.py
+docker-compose.yaml

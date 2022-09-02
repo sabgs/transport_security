@@ -2,6 +2,7 @@ from marshmallow import ValidationError
 
 from ...models.category import Category
 from ...schemas.category import category_schema, categories_schema
+from ...schemas.question import question_schema, questions_schema
 
 def get_all():
    app_categories = Category.get_all()
@@ -28,3 +29,7 @@ def get_one_by_number(number):
    category = Category.get_by_number(number)
 
    return category_schema.dump(category)
+
+def get_all_questions_for_category(number):
+   category = Category.get_by_number(number)
+   return questions_schema.dump(category.questions)

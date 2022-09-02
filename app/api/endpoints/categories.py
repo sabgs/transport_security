@@ -19,6 +19,16 @@ def create_category():
 @app.route(f'{ENDPOINT_STR}/<int:number>', methods=['GET'])
 def get_category_by_number(number):
    return jsonify(service.get_one_by_number(number))
+
+
+@app.route(f'{ENDPOINT_STR}/<int:number>/questions', methods=['GET'])
+def get_all_questions_for_category(number):
+   return jsonify(service.get_all_questions_for_category(number))
+
+
+# @app.route(f'{ENDPOINT_STR}/<int:number>', methods=['GET'])
+# def get_category_by_number(number):
+#    return jsonify(service.get_one_by_number(number))
 # @app.route(f'{ENDPOINT_STR}', methods=['GET'])
 # @app.route(f'{ENDPOINT_STR}', methods=['GET'])
 # @app.route(f'{ENDPOINT_STR}', methods=['GET'])

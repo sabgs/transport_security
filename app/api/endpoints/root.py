@@ -2,23 +2,20 @@ from flask import request, jsonify
 from marshmallow import ValidationError
 
 from ...main import app
-from ...schemas.request_data import RequestSchema
+from ...core.ext import db
+
 
 @app.route('/')
 def root():
    return '123123'
 
 
-@app.route('/test', methods=['POST'])
+@app.route('/drop', methods=['GET'])
 def test():
    try:
-      data = request.get_json()['questions']
-      num = request.get_json()['category']
-      print(num)
-      rs = RequestSchema(many=True)
-      res = rs.load(data)
+      db.drop_all()
    except ValidationError as err:
       return jsonify(err.messages)
 
-   return jsonify(rs.dump(res))
+   return jsonify('all drop!')
 
