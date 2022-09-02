@@ -1,5 +1,7 @@
+from typing import Union
 from marshmallow import ValidationError
 
+from ...core.ext import db
 from ...models.question import Question
 from ...models.answer import Answer
 from ...schemas.question import question_schema, question_schema_db, questions_schema_db
@@ -42,17 +44,19 @@ def create_question(data: dict):
             question.correct_answer.append(answer)
          question.answers.append(answer)
 
-   question.save()
 
    return question
 
-def create(data: dict | list):
+def create(data: Union[list, dict]):
    if type(data) == list:
       questions_list = []
       for question in data:
          questions_list.append(create_question(question))
+      db.session.bulk_save_objects(questions_list)
+      db.session.commit()
       return questions_schema_db.dump(questions_list)
 
    question = create_question(data)
+   question.save()
 
    return question_schema_db.dump(question)
