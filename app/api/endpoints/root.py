@@ -1,5 +1,4 @@
-from flask import request, jsonify
-from marshmallow import ValidationError
+from flask import jsonify
 
 from ...main import app
 from ...core.ext import db
@@ -7,15 +6,12 @@ from ...core.ext import db
 
 @app.route('/')
 def root():
-   return '123123'
+   return 'Hello world!'
 
 
 @app.route('/drop', methods=['GET'])
-def test():
-   try:
-      db.drop_all()
-   except ValidationError as err:
-      return jsonify(err.messages)
+def drop_all_tables():
+   db.drop_all()
 
    return jsonify('all drop!')
 

@@ -1,18 +1,17 @@
 from ..core.ext import db
 
+correct_answers = db.Table('correct_answers',
+   db.Column('question_id', db.Integer, db.ForeignKey('question.id'), primary_key=True),
+   db.Column('answer_id', db.Integer, db.ForeignKey('answer.id'), primary_key=True)
+)
 class Question(db.Model):
    id = db.Column(db.Integer, primary_key=True)
    number = db.Column(db.Integer, nullable=False)
    text = db.Column(db.Text, nullable=False)
-   correct_answer = db.Column(db.Integer)
+   correct_answer = db.relationship('Answer', secondary=correct_answers, lazy=False, backref=db.backref('questions', lazy=True))
    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
    answers = db.relationship('Answer', lazy=False)
 
-   def __init__(self, number: int, text: str, correct_answer: int, category_id: int):
-      self.number = number
-      self.text = text
-      self.correct_answer = correct_answer
-      self.category_id = category_id
 
    @classmethod
    def get_all(cls):

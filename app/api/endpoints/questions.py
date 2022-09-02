@@ -15,7 +15,9 @@ def create_question():
    return jsonify(service.create(data))
 
 
-# @app.route(f'{ENDPOINT_STR}', methods=['GET'])
+@app.route(f'{ENDPOINT_STR}/<int:id>', methods=['GET'])
+def get_question_by_id(id):
+   return jsonify(service.get_single_question(id))
 # @app.route(f'{ENDPOINT_STR}', methods=['GET'])
 # @app.route(f'{ENDPOINT_STR}', methods=['GET'])
 # @app.route(f'{ENDPOINT_STR}', methods=['GET'])

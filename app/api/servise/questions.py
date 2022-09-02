@@ -2,18 +2,18 @@ from marshmallow import ValidationError
 
 from ...models.question import Question
 from ...models.answer import Answer
-from ...schemas.question import question_schema, questions_schema
-from ...schemas.answer import answer_schema, answers_schema
-from ...schemas.request_data import request_schema, requests_schema
+from ...schemas.question import question_schema, question_schema_db, questions_schema_db
+from ...schemas.answer import answer_schema
 
 def get_all():
    all_questions = Question.get_all()
 
-   return questions_schema.dump(all_questions)
+   return questions_schema_db.dump(all_questions)
 
-def get_normolize_data(data):
-   normalize_data = request_schema.dump(request_schema.load(data))
-   return normalize_data
+def get_single_question(id):
+   question = Question.get_by_id(id)
+
+   return question_schema_db.dump(question)
 
 
 def create_answer(data):
@@ -28,32 +28,31 @@ def create_answer(data):
 
 def create_question(data: dict):
    try:
-      normolize_data = get_normolize_data(data)
-      valid_data = question_schema.load(normolize_data)
+      valid_data = question_schema.dump(question_schema.load(data))
    except ValidationError as err:
       return err.messages
-   category = Question(number=valid_data['number'],
+   question = Question(number=valid_data['number'],
                        text=valid_data['text'],
-                       correct_answer=valid_data['correct_answer'],
                        category_id=valid_data['category_id']
                   )
    if valid_data['answers']:
-      for answer in valid_data['answers']:
+      for i, answer in enumerate(valid_data['answers']):
          answer = create_answer(answer)
-         category.answers.append(answer)
+         if i == valid_data['correct_answer']:
+            question.correct_answer.append(answer)
+         question.answers.append(answer)
 
-   category.save()
+   question.save()
 
-   return category
+   return question
 
 def create(data: dict | list):
-   # print(requests_schema.load(data))
    if type(data) == list:
       questions_list = []
       for question in data:
          questions_list.append(create_question(question))
-      return questions_schema.dump(questions_list)
+      return questions_schema_db.dump(questions_list)
 
    question = create_question(data)
 
-   return question_schema.dump(question)
+   return question_schema_db.dump(question)
